@@ -58,9 +58,31 @@ const TasksSlice = createSlice({
       }
     },
   },
+
+    /*
+    * Extends the reducer for the async actions
+    * You can read more about it at https://redux-toolkit.js.org/api/createAsyncThunk
+    */
+    extraReducers(builder) {
+        builder
+        .addCase(fetchTasks.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+        state.tasks = [];
+        })
+        .addCase(fetchTasks.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.error = null;
+        // Add any fetched tasks to the array
+        state.tasks = action.payload;
+        })
+        .addCase(fetchTasks.rejected, (state) => {
+        state.status = 'failed';
+        state.error = "Something went wrong";
+        state.tasks = [];
+        });
+    },
 });
-
-
 
 // The actions contained in the slice are exported for usage in our components
 export const { updateTaskState } = TasksSlice.actions;
